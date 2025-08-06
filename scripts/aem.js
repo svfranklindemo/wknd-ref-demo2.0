@@ -677,8 +677,58 @@ function decorateBlock(block) {
     const section = block.closest('.section');
     if (section) section.classList.add(`${shortBlockName}-container`);
     // eslint-disable-next-line no-use-before-define
+
+    
     decorateButtons(block);
+
+        // Set block ID with shortBlockName and index
+  const blocks = document.querySelectorAll(`.${shortBlockName}`);
+  blocks.forEach((block, index) => {
+    block.id = `${shortBlockName}-${index}`;
+    
+    // Add indexed IDs to images within the block
+    const images = block.querySelectorAll('img');
+    images.forEach((img, imgIndex) => {
+      const imgId = `${shortBlockName}_${index}_image_${imgIndex}`;
+      img.id = imgId;
+      
+      // If image is inside a picture element, also add a data attribute to the picture
+      const picture = img.closest('picture');
+      if (picture) {
+        picture.setAttribute('data-img-id', imgId);
+      }
+    });
+  });
   }
+}
+
+/**
+ * Decorates a default block.
+ * @param {Element} block The block element
+ */
+export function decorateDefaultBlock() {
+  const shortBlockName = 'default-content-wrapper';
+    
+
+  // Set block ID with shortBlockName and index
+  const blocks = document.querySelectorAll(`.${shortBlockName}`);
+  blocks.forEach((block, index) => {
+    block.id = `${shortBlockName}-${index}`;
+    block.setAttribute('data-block-name', shortBlockName);
+    
+    // Add indexed IDs to images within the block
+    const images = block.querySelectorAll('img');
+    images.forEach((img, imgIndex) => {
+      const imgId = `section_${index}_image_${imgIndex}`;
+      img.id = imgId;
+      
+      // If image is inside a picture element, also add a data attribute to the picture
+      const picture = img.closest('picture');
+      if (picture) {
+        picture.setAttribute('data-img-id', imgId);
+      }
+    });
+  });
 }
 
 /**
