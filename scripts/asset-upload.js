@@ -241,19 +241,16 @@ const getPayloadUpdates = async () => {
             return null;
         }
 
-        const pagePathVar = window.location.pathname === "/us/en/" 
-            ? "/us/en/index" 
-            : window.location.pathname.endsWith('/') 
-                ? window.location.pathname.slice(0, -1) 
-                : window.location.pathname;
+        const pagePathVar = window.location.pathname.endsWith('/') ? '/en' : window.location.pathname;
+
         return {
-            projectName: targetDemo.name || "defaultName",
-            type: "wknd",
+            projectName: targetDemo.name,
+            type: "wknd2",
             userLdap: userLdap,
             aemURL: "https://author-p121371-e1189853.adobeaemcloud.com/",
             images: updates,
             demoId: targetDemo.id,
-            pagePath: pagePathVar,
+            pagePath: "/content/"+targetDemo.id+"/language-masters"+pagePathVar,
             projectId: ids.projectId
         };
     } catch (error) {
@@ -273,90 +270,6 @@ const checkAEMInstance = async () => {
     } catch (error) {
         console.error('Error checking AEM instance:', error);
         return false;
-    }
-};
-
-// Function to update the targetUrl of a demo in a project
-const updateTargetUrl = async (projectId, demoId,targetUrl) => {
-    try {
-        const token = getAuthToken();
-        if (!token) {
-            console.error('Authentication token not found');
-            return;
-        }
-
-        // Fetch the current project data
-        const projectData = await fetchProjectData(projectId);
-        if (!projectData) {
-            console.error('Project data not found');
-            return;
-        }
-
-        // Find the specific demo in the project data
-        const targetDemo = projectData.demos.find(demo => demo.id === demoId);
-        if (!targetDemo) {
-            console.error('Demo not found in project data');
-            return;
-        }
-
-        // Prepare the PATCH payload, updating only targetUrl
-        const patchPayload = {
-            ...targetDemo,
-            targetUrl: targetUrl
-        };
-
-        // Send PATCH request
-        const patchUrl = `${demoPilotDomain}/projects/${projectId}/demos/${demoId}`;
-        const response = await fetch(patchUrl, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-                'accept': '*/*'
-            },
-            body: JSON.stringify(patchPayload)
-        });
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error(`Failed to update targetUrl: ${response.status} - ${errorText}`);
-        } else {
-            console.log('targetUrl updated successfully');
-        }
-    } catch (error) {
-        console.error('Error updating targetUrl:', error);
-    }
-};
-
-// Function to get the targetUrl by calling an API with the content payload and extracting the repo name
-const getTargetUrl = async (content) => {
-    try {
-        // Use the provided API endpoint to fetch repo name
-        const apiUrl = 'https://275323-918sangriatortoise.adobeio-static.net/api/v1/web/dx-excshell-1/getRepoName';
-        
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'accept': '*/*'
-            },
-            body: JSON.stringify(content)
-        });
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error(`Failed to fetch repo name: ${response.status} - ${errorText}`);
-            return null;
-        }
-        const repoName = await response.text();
-        if (repoName) {
-            // Construct the target URL using the repo name
-            return `https://main--${repoName}--svfranklindemo.aem.live/us/en/`;
-            //return null;
-        }
-        return null;
-    } catch (error) {
-        console.error('Error fetching repo name:', error);
-        return null;
     }
 };
 
@@ -393,7 +306,7 @@ export async function uploadAsset() {
 
         console.log("payload for assets:", updates);
 
-        const prod_url = "https://275323-918sangriatortoise.adobeio-static.net/api/v1/web/dx-excshell-1/assets";
+        const prod_url = "https://275323-918sangriatortoise.adobeio-static.net/api/v1/web/dx-excshell-1/updateXwalkSite";
         const stage_url = "https://275323-918sangriatortoise-stage.adobeio-static.net/api/v1/web/dx-excshell-1/assets";
         // Send request in no-cors mode
         const response = await fetch(prod_url, {
@@ -409,9 +322,7 @@ export async function uploadAsset() {
         let content = await response.text()
         console.log('content from upload:', content);
 
-        const targetUrl = await getTargetUrl(updates) || window.location.origin+window.location.pathname;
-        //update targetUrl of demo ID using patch request
-        await updateTargetUrl(updates.projectId, updates.demoId,targetUrl)
+        const targetUrl = window.location.origin+window.location.pathname;
         
         
 
