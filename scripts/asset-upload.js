@@ -98,10 +98,11 @@ const getResourceType = (pathToModify) => {
             "column": ["text", "image", "button", "title"],
             "activity-details": ["activity-detail"],
             "accordion": ["accordion-item"],
-            "carousel": ["slide"],
+            "carousel": ["card"],
             "section": ["image","text","title","button"],
             "header": ["image","text","title","button"],
-            "footer": ["image","text","title","button"]
+            "footer": ["image","text","title","button"],
+            "cards": ["card"]
         };
 
         // Component definition data with their resource types
@@ -114,7 +115,8 @@ const getResourceType = (pathToModify) => {
             "columns": "core/franklin/components/columns/v1/columns",
             "hero": "core/franklin/components/block/v1/block",
             "carousel": "core/franklin/components/block/v1/block",
-            "slide": "core/franklin/components/block/v1/block/item",
+            "card": "core/franklin/components/block/v1/block/item",
+            "cards": "core/franklin/components/block/v1/block",
             "accordion": "core/franklin/components/block/v1/block",
             "accordion-item": "core/franklin/components/block/v1/block/item",
             "teaser": "core/franklin/components/block/v1/block",
