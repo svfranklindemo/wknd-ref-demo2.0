@@ -32,8 +32,27 @@ export default function decorate(block) {
     const optimizedPic = createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]);
     moveInstrumentation(img, optimizedPic.querySelector('img'));
     img.closest('picture').replaceWith(optimizedPic);
+    img.id = imgId;
   });
  
   block.textContent = '';
   block.append(ul);
+
+  const blocks = document.querySelectorAll(`.cards`);
+  blocks.forEach((block, index) => {
+    block.id = `cards-${index}`;
+    
+    // Add indexed IDs to images within the block
+    const images = block.querySelectorAll('img');
+    images.forEach((img, imgIndex) => {
+      const imgId = `cards_${index}_image_${imgIndex}`;
+      img.id = imgId;
+      
+      // If image is inside a picture element, also add a data attribute to the picture
+      const picture = img.closest('picture');
+      if (picture) {
+        picture.setAttribute('data-img-id', imgId);
+      }
+    });
+  });
 }
