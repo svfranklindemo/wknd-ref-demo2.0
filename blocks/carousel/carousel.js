@@ -50,4 +50,22 @@ export default function decorate(block) {
   block.parentNode.parentNode.prepend(leftContent);
   block.append(slider);
   createSlider(block);
+
+  const blocks = document.querySelectorAll(`.carousel`);
+  blocks.forEach((block, index) => {
+    block.id = `carousel-${index}`;
+    
+    // Add indexed IDs to images within the block
+    const images = block.querySelectorAll('img');
+    images.forEach((img, imgIndex) => {
+      const imgId = `carousel_${index}_image_${imgIndex}`;
+      img.id = imgId;
+      
+      // If image is inside a picture element, also add a data attribute to the picture
+      const picture = img.closest('picture');
+      if (picture) {
+        picture.setAttribute('data-img-id', imgId);
+      }
+    });
+  });
 }
