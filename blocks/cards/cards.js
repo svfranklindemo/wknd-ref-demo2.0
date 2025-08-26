@@ -32,7 +32,6 @@ export default function decorate(block) {
     const optimizedPic = createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]);
     moveInstrumentation(img, optimizedPic.querySelector('img'));
     img.closest('picture').replaceWith(optimizedPic);
-    img.id = imgId;
   });
  
   block.textContent = '';
