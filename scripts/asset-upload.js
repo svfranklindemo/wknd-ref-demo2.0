@@ -281,12 +281,12 @@ export async function uploadAsset() {
         showLoader();
         
         //check if AEM instance is valid and running or not 
-        const aemInstance = await checkAEMInstance();
+        /*const aemInstance = await checkAEMInstance();
         if (!aemInstance) {
             hideLoader();
             showPopup('AEM instance is not running. Please check the AEM instance. or reach out to LPB team', 'notice');
             return { status: 'error', message: 'AEM instance is not valid or running' };
-        }
+        }*/
 
         // Check for token before proceeding
         const token = getAuthToken();
