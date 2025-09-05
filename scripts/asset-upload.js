@@ -8,6 +8,10 @@ if (shouldLoadCopilot) {
             ? 'https://demo-system-zoltar-demo-pilot-deploy-ethos101-prod-23e40d.cloud.adobe.io' 
             : 'https://demo-system-zoltar-demo-pilot-deploy-ethos101-stag-6229b6.stage.cloud.adobe.io';
 }
+let env = 'production';
+if (shouldLoadCopilot) {
+    env = urlParams.get('copilot-prod') === '1' ? 'production' : 'stage';
+}
 // Function to get the authentication token
 const getAuthToken = () => {
     return window.location.search.split('ims_token=')[1];
@@ -253,7 +257,8 @@ const getPayloadUpdates = async () => {
             images: updates,
             demoId: targetDemo.id,
             pagePath: "/content/"+targetDemo.id+"/language-masters"+pagePathVar,
-            projectId: ids.projectId
+            projectId: ids.projectId,
+            env: env
         };
     } catch (error) {
         console.error('Error getting payload updates:', error);
