@@ -8,9 +8,10 @@ if (shouldLoadCopilot) {
             ? 'https://demo-system-zoltar-demo-pilot-deploy-ethos101-prod-23e40d.cloud.adobe.io' 
             : 'https://demo-system-zoltar-demo-pilot-deploy-ethos101-stag-6229b6.stage.cloud.adobe.io';
 }
-let env = 'production';
+
+let aemURL = 'https://author-p121371-e1189853.adobeaemcloud.com/';
 if (shouldLoadCopilot) {
-    env = urlParams.get('copilot-prod') === '1' ? 'production' : 'stage';
+    aemURL = urlParams.get('copilot-prod') === '1' ? 'https://author-p165802-e1765367.adobeaemcloud.com/' : 'https://author-p121371-e1189853.adobeaemcloud.com/';
 }
 // Function to get the authentication token
 const getAuthToken = () => {
@@ -253,7 +254,7 @@ const getPayloadUpdates = async () => {
             projectName: targetDemo.name,
             type: "wknd2",
             userLdap: userLdap,
-            aemURL: "https://author-p121371-e1189853.adobeaemcloud.com/",
+            aemURL: aemURL,
             images: updates,
             demoId: targetDemo.id,
             pagePath: "/content/"+targetDemo.id+"/language-masters"+pagePathVar,
