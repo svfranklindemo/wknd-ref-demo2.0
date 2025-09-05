@@ -258,8 +258,7 @@ const getPayloadUpdates = async () => {
             images: updates,
             demoId: targetDemo.id,
             pagePath: "/content/"+targetDemo.id+"/language-masters"+pagePathVar,
-            projectId: ids.projectId,
-            env: env
+            projectId: ids.projectId
         };
     } catch (error) {
         console.error('Error getting payload updates:', error);
