@@ -70,7 +70,7 @@ if (shouldLoadCopilot) {
             console.log('Copilot publish p:'+projectId + ' d:'+demoId);
             uploadAsset();
           })
-    });
+    },{once: true});
 
     // Backup initialization in case DOMContentLoaded already fired
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
