@@ -10,7 +10,7 @@ if (shouldLoadCopilot) {
         
         const domain = urlParams.get('copilot-prod') === '1' 
             ? 'copilot.adobedemo.com' 
-            : 'stage.copilot.adobedemo.com';
+            : 'stage.pilot.adobedemo.com';
 
         // Function to inject CSS
         const injectCSS = () => {
