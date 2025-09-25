@@ -1,12 +1,24 @@
-import { uploadAsset } from './asset-upload.js';
 // Check if copilot parameter exists in URL
 const urlParams = new URLSearchParams(window.location.search);
 const shouldLoadCopilot = urlParams.has('copilotEditor') || urlParams.has('copilotPreview');
  
 if (shouldLoadCopilot) {
     // Initialize copilot when DOM is ready
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
         console.log('Initializing New copilot...');
+        
+        // Conditionally import uploadAsset based on stage/prod
+        let uploadAsset;
+        const isProd = urlParams.get('copilot-prod') === '1';
+        if (isProd) {
+            const { uploadAsset: prodUploadAsset } = await import('./asset-upload.js');
+            uploadAsset = prodUploadAsset;
+            console.log('Using production uploadAsset');
+        } else {
+            const { uploadAsset: stageUploadAsset } = await import('./asset-upload-stage.js');
+            uploadAsset = stageUploadAsset;
+            console.log('Using stage uploadAsset');
+        }
         
         const domain = urlParams.get('copilot-prod') === '1' 
             ? 'copilot.adobedemo.com' 
@@ -68,7 +80,11 @@ if (shouldLoadCopilot) {
             e.stopPropagation();
             const {projectId, demoId} = e.detail??{};
             console.log('Copilot publish p:'+projectId + ' d:'+demoId);
-            uploadAsset();
+            if (uploadAsset) {
+                uploadAsset();
+            } else {
+                console.error('uploadAsset function not available');
+            }
           })
     },{once: true});
 
