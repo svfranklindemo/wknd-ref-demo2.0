@@ -282,7 +282,7 @@ const getPayloadUpdates = async () => {
       aemURL: aemURL,
       images: updates,
       demoId: targetDemo.id,
-      pagePath: "/content/"+userLdap+"/"+targetDemo.id+"/us/en"+pagePathVar,
+      pagePath: "/content/" + targetDemo.id + "/language-masters" + pagePathVar,
       projectId: ids.projectId,
       authToken: 'bearer '+token,
     };
