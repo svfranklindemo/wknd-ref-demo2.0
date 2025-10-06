@@ -1,12 +1,12 @@
 import { showLoader, hideLoader, showPopup } from "./ui-utils.js";
 
 const urlParams = new URLSearchParams(window.location.search);
-const shouldLoadCopilot = urlParams.has("copilot-prod");
+const shouldLoadCopilot = urlParams.has("zdp-env");
 let demoPilotDomain =
   "https://demo-system-zoltar-demo-pilot-deploy-ethos101-stag-6229b6.stage.cloud.adobe.io";
 if (shouldLoadCopilot) {
   demoPilotDomain =
-    urlParams.get("copilot-prod") === "1"
+    urlParams.get("zdp-env") === "prod"
       ? "https://demo-system-zoltar-demo-pilot-deploy-ethos101-prod-23e40d.cloud.adobe.io"
       : "https://demo-system-zoltar-demo-pilot-deploy-ethos101-stag-6229b6.stage.cloud.adobe.io";
 }
@@ -14,13 +14,13 @@ if (shouldLoadCopilot) {
 let aemURL = "https://author-p121371-e1189853.adobeaemcloud.com/";
 if (shouldLoadCopilot) {
   aemURL =
-    urlParams.get("copilot-prod") === "1"
+    urlParams.get("zdp-env") === "prod"
       ? "https://author-p165802-e1765367.adobeaemcloud.com/"
       : "https://author-p121371-e1189853.adobeaemcloud.com/";
 }
 // Function to get the authentication token
 const getAuthToken = () => {
-  return window.location.search.split("ims_token=")[1];
+  return window.location.search.split("zdp-token=")[1];
 };
 
 // Function to get user LDAP (now returns email from IMS profile)
@@ -237,8 +237,7 @@ const processEdits = async (projectId, demoId) => {
 const getPayloadUpdates = async () => {
   try {
     const urlParams = new URLSearchParams(window.location.search);
-    const copilotParam =
-      urlParams.get("copilotEditor") || urlParams.get("copilotPreview");
+    const copilotParam = urlParams.get("zdp-id");
     const ids = extractIds(copilotParam);
 
     const token = getAuthToken();
