@@ -209,7 +209,7 @@ if (shouldLoadZDP) {
     
     // Initialize copilot when DOM is ready
     document.addEventListener('DOMContentLoaded', async () => {
-        console.log('Initializing New copilot...');
+        console.log('Initializing ZDP pilot...');
         
         // Conditionally import uploadAsset based on stage/prod
         let uploadAsset;
