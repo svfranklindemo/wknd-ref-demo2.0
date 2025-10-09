@@ -3,6 +3,9 @@
  * Handles initialization of Adobe Copilot and ZDP (Zero Data Platform) editors
  */
 
+// Global flag to prevent multiple initializations
+let isInitialized = false;
+
 // Configuration
 const CONFIG = {
     domains: {
@@ -40,6 +43,7 @@ const getEnvironmentConfig = (isProd) => {
 };
 
 // Authentication function
+/*
 const authenticateWithPilot = async (domain, token, tokenName = 'IMS') => {
     try {
         if (!token) {
@@ -78,6 +82,7 @@ const authenticateWithPilot = async (domain, token, tokenName = 'IMS') => {
         return false;
     }
 };
+*/
 
 // Asset upload function loader
 const loadUploadAsset = async (isProd) => {
@@ -100,6 +105,7 @@ const loadUploadAsset = async (isProd) => {
 // CSS injection function
 const injectCSS = (domain) => {
     if (document.getElementById(CONFIG.cssId)) {
+        console.log('Copilot CSS already injected, skipping...');
         return; // Already injected
     }
 
@@ -114,11 +120,13 @@ const injectCSS = (domain) => {
     link.onload = () => console.log('Copilot CSS loaded successfully');
     
     document.head.appendChild(link);
+    console.log('Copilot CSS injection initiated');
 };
 
 // Script injection function
 const injectScript = (domain) => {
     if (document.getElementById(CONFIG.scriptId)) {
+        console.log('Copilot script already injected, skipping...');
         return; // Already injected
     }
 
@@ -138,10 +146,17 @@ const injectScript = (domain) => {
             document.body.appendChild(script);
         });
     }
+    console.log('Copilot script injection initiated');
 };
 
 // Publish event handler
 const setupPublishHandler = (uploadAsset, type = 'Copilot') => {
+    // Check if handler already exists
+    if (document.hasAttribute('data-copilot-publish-handler')) {
+        console.log('Publish handler already set up, skipping...');
+        return;
+    }
+    
     document.addEventListener('copilot-publish', (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -154,20 +169,32 @@ const setupPublishHandler = (uploadAsset, type = 'Copilot') => {
             console.error('uploadAsset function not available');
         }
     });
+    
+    // Mark that handler is set up
+    document.setAttribute('data-copilot-publish-handler', 'true');
 };
 
 // Main initialization function
 const initializeEditor = async (config) => {
+    // Prevent multiple initializations
+    if (isInitialized) {
+        console.log('Editor already initialized, skipping...');
+        return;
+    }
+    
     const { type, params, token, tokenName, prodParam } = config;
     
     console.log(`Initializing ${type}...`);
+    
+    // Mark as initialized to prevent duplicate calls
+    isInitialized = true;
     
     // Determine environment
     const isProd = isProduction(params, prodParam);
     const envConfig = getEnvironmentConfig(isProd);
     
     // Authenticate
-    await authenticateWithPilot(envConfig.pilot, token, tokenName);
+    //await authenticateWithPilot(envConfig.pilot, token, tokenName);
     
     // Load upload asset function
     const uploadAsset = await loadUploadAsset(isProd);
@@ -193,7 +220,7 @@ const setupDOMReadyHandler = (config) => {
     // Backup initialization in case DOMContentLoaded already fired
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
         console.log('DOM already loaded, initializing immediately...');
-        document.dispatchEvent(new Event('DOMContentLoaded'));
+        handler();
     }
 };
 
