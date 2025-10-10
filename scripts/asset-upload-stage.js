@@ -207,7 +207,16 @@ const processEdits = async (projectId, demoId) => {
 
     return edits.map((edit) => {
       const pathToModify = edit.elementRef.id;
-      if (!pathToModify) {
+
+      if(edit.elementRef.xPath.contains("header")){
+        componentSection = "header";
+      } else if(edit.targetInfo.xPath.contains("footer")){
+        componentSection = "footer";
+      } else {
+        componentSection = "section";
+      }
+
+      if (pathToModify == "" && (componentSection != "header" || componentSection != "footer")) {
         return; // Skip this object if pathToModify is not present
       }
 
@@ -225,6 +234,7 @@ const processEdits = async (projectId, demoId) => {
         originalEdit: edit,
         editId: edit.id,
         resource: resource,
+        componentSection: componentSection
       };
     });
   } catch (error) {

@@ -210,6 +210,16 @@ const processEdits = (demo) => {
     const pathToModify = getPathToModify(edit.id);
 
     const resource = getResourceType(pathToModify);
+    let componentSection = "";
+    if(edit.targetInfo.xPath.contains("header")){
+      componentSection = "header";
+      pathToModify = "nav_image";
+    } else if(edit.targetInfo.xPath.contains("footer")){
+      componentSection = "footer";
+      pathToModify = "footer_image";
+    } else {
+      componentSection = "section";
+    }
     return {
       importedUrl: edit.sourceUrl || "",
       pathToModify: pathToModify || edit.targetInfo.xPath || "",
@@ -217,6 +227,7 @@ const processEdits = (demo) => {
       originalEdit: edit,
       editId: edit.id,
       resource: resource,
+      componentSection: componentSection
     };
   });
 };
