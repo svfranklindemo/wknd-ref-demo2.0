@@ -206,12 +206,14 @@ const processEdits = async (projectId, demoId) => {
     const edits = await response.json();
 
     return edits.map((edit) => {
-      const pathToModify = edit.elementRef.id;
+      let pathToModify = edit.elementRef.id;
 
-      if(edit.elementRef.xPath.contains("header")){
+      if(edit.elementRef.xPath.includes("header")){
         componentSection = "header";
-      } else if(edit.targetInfo.xPath.contains("footer")){
+        pathToModify = "nav_image";
+      } else if(edit.targetInfo.xPath.includes("footer")){
         componentSection = "footer";
+        pathToModify = "footer_image";
       } else {
         componentSection = "section";
       }

@@ -207,14 +207,14 @@ const processEdits = (demo) => {
   if (!demo || !demo.edits) return null;
 
   return demo.edits.map((edit) => {
-    const pathToModify = getPathToModify(edit.id);
+    let pathToModify = getPathToModify(edit.id);
 
     const resource = getResourceType(pathToModify);
     let componentSection = "";
-    if(edit.targetInfo.xPath.contains("header")){
+    if (edit.targetInfo.xPath && edit.targetInfo.xPath.includes("header")) {
       componentSection = "header";
       pathToModify = "nav_image";
-    } else if(edit.targetInfo.xPath.contains("footer")){
+    } else if(edit.targetInfo.xPath && edit.targetInfo.xPath.includes("footer")){
       componentSection = "footer";
       pathToModify = "footer_image";
     } else {
