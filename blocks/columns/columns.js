@@ -103,10 +103,15 @@ export default function decorate(block) {
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
 
+  // Get block index for ID generation
+  const allColumnsBlocks = document.querySelectorAll('.columns');
+  const blockIndex = Array.from(allColumnsBlocks).indexOf(block);
+  
+  let contentCounter = 0;
+
   // setup image columns
   [...block.children].forEach((row) => {
     row.classList.add('columns-row');
-    //const firstChild = row.querySelector(':scope > div:first-child');
     [...row.children].forEach((col) => {
       const pic = col.querySelector('picture');
       if (pic) {
@@ -116,7 +121,16 @@ export default function decorate(block) {
           picWrapper.classList.add('columns-img-col');
         }
       }
-     // const videoBlock = col.querySelector('div[data-aue-model="video"]');
+
+      // Check for text content (paragraphs or headings)
+      const textContent = col.querySelector('p, h1, h2, h3, h4, h5, h6');
+      if (textContent && !pic) {  // Only add if no picture (avoid double counting)
+        const textBlock = textContent.closest('div');
+        if (textBlock) {
+          textBlock.setAttribute('data-text-block-index', contentCounter);
+          contentCounter++;
+        }
+      }
 
       const linkavl = col.querySelector('a')?.href;
       const videoBlock = linkavl ? isVideoLink(linkavl) : false;
@@ -152,6 +166,21 @@ export default function decorate(block) {
           }
         }
       }
+    });
+  });
+
+  // Add IDs to headings and paragraphs with container context
+  ['h1', 'h2', 'h3', 'h4', 'h5', 'h6','p'].forEach((tag) => {
+    const elements = block.querySelectorAll(tag);
+    elements.forEach((el) => {
+      const textBlock = el.closest('[data-text-block-index]');
+      const textBlockIndex = textBlock ? textBlock.getAttribute('data-text-block-index') : 'unknown';
+      
+      // Count this tag within its text block
+      const textBlockElements = textBlock ? textBlock.querySelectorAll(tag) : [el];
+      const tagIndex = Array.from(textBlockElements).indexOf(el);
+      
+      el.id = `columns_${blockIndex}_text_${textBlockIndex}_${tag}_${tagIndex}`;
     });
   });
 }
