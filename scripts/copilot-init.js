@@ -1,5 +1,5 @@
 // Check if copilot parameter exists in URL
-const urlParams = new URLSearchParams(window.location.search);
+/*const urlParams = new URLSearchParams(window.location.search);
 const shouldLoadCopilot = urlParams.has('copilotEditor') || urlParams.has('copilotPreview');
 
 if (shouldLoadCopilot) {
@@ -142,7 +142,7 @@ if (shouldLoadCopilot) {
 } else {
     console.log('Copilot not enabled. Add ?copilotEditor or ?copilotPreview to URL to enable.');
 } 
-
+*/
 const zdpUrlParams = new URLSearchParams(window.location.search);
 const shouldLoadZDP = zdpUrlParams.has('zdp-id');
 
